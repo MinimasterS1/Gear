@@ -12,8 +12,6 @@
 
 #include "iostream"
 
-
-
 class ENGINE_API EditorAPI {
 
 public:
@@ -24,40 +22,30 @@ public:
 
     ~EditorAPI();
 
-
     void RenderEditor();
 
     void RenderConsole();
 
     void DrawFrameBuffer();
 
-    int w;
-    int h;
+    void setWidth(int width);
 
-    GLFWwindow* m_Window;
-
+    void setHeight(int height);
 
     void WindowScale(GLFWwindow* window, int* width, int* height);
 
     void DrawPanel(const char* name, ImVec2 position, ImVec2 size, std::function<void()> contentFunc);
 
-
-    int  getWidth();
-
+    int getWidth(); 
     int getHeight();
-
     int getXoffset();
-
     int getYoffset();
 
-    void setWidth(int width);
+    int w, h;
 
-    void setHeight(int height);
-
+    GLFWwindow* m_Window;
 
 private:
-
-
     const char* m_Text;
 
    int RenderPanelWidth = 1580;
@@ -67,12 +55,6 @@ private:
 
    bool ShowLoadFileDialog = false;
    bool ShowSaveFileDialog = false;
-
-
-
-
-
-
 
 };
 

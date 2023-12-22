@@ -26,11 +26,9 @@
 #include "gMesh.h"
 #include "gShader.h"
 
-
 using namespace std;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
-
 
 class ENGINE_API Model
 {
@@ -39,11 +37,6 @@ public:
     Model();
 
    ~Model();
-
-    vector<Texture> textures_loaded;
-    vector<Mesh> meshes;
-    string directory;
-    bool gammaCorrection;
 
     Model(string const& path, bool gamma = false);
 
@@ -66,6 +59,14 @@ public:
     vector<Texture> diffuseMaps;
 
     vector<Texture> specularMaps;
+
+    vector<Texture> textures_loaded;
+
+    vector<Mesh> meshes;
+
+    string directory;
+
+    bool gammaCorrection;
 
     std::vector<Texture> normalMaps;
     std::vector<Texture> heightMaps;

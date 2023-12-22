@@ -20,65 +20,48 @@ public:
     ~SceneObject();
 
     SceneObject(Model model);
-       
-    void setPosition(const glm::vec3& pos);
 
-    glm::vec3 getPosition() const;
 
-    void setRotation(const glm::vec3& rot);
-
-    glm::vec3 getRotation() const;
-
-    void setScale(const glm::vec3& s);
-
-    glm::vec3 getScale() const;
-
-    glm::mat4 getTransform() const;
-
-    std::vector<SceneObject> objects;
-
-    void AddObject(const SceneObject& object);
-
-    void Draw(Camera& camera, int SCR_WIDTH, int SCR_HEIGHT);
-   
     template <typename ShaderType = Shader>
 
     void Draw(Camera& camera, int SCR_WIDTH, int SCR_HEIGHT, Shader& shader = modelShader);
 
-    bool hasMeshes() const;
+    void Draw(Camera& camera, int SCR_WIDTH, int SCR_HEIGHT);
 
-    void setHighlightColor(const glm::vec4& color);
+    void AddObject(const SceneObject& object);
 
-    glm::vec4 getHighlightColor() const;
-
-    void setTextureOffsetX(const float moveX);
-
-    float getTextureOffsetX() const;
-
-    void setTextureOffsetY(const float moveY);
-
-    float getTextureOffsetY() const;
-
-    void setTextureScale(const float scale);
-
-    float getTextureScale() const;
-
-    Model model;
-
-    glm::vec3 Position;
-    glm::vec3 Rotation;
-    glm::vec3 Scale;
-    glm::vec3 BaseColor;
-   
-    std::string ObjectName;
-    Shader modelShader;
-    Shader  sipmleDepthShader;
-
-    int ObjectID;
+    void setMeshTextures(unsigned int newTextureID);
 
     void setObjectName(const std::string& name);
 
     void setObjectID(const int& ID);
+
+    bool hasMeshes() const;
+       
+
+    void setPosition(const glm::vec3& pos);
+    glm::vec3 getPosition() const;
+
+    void setRotation(const glm::vec3& rot);
+    glm::vec3 getRotation() const;
+
+    void setScale(const glm::vec3& s);
+    glm::vec3 getScale() const;
+
+    glm::mat4 getTransform() const;
+
+    void setHighlightColor(const glm::vec4& color);
+    glm::vec4 getHighlightColor() const;
+
+    void setTextureOffsetX(const float moveX);
+    float getTextureOffsetX() const;
+
+    void setTextureOffsetY(const float moveY);
+    float getTextureOffsetY() const;
+
+    void setTextureScale(const float scale);
+    float getTextureScale() const;
+
 
     const std::string& getObjectName() const;
 
@@ -88,12 +71,28 @@ public:
 
     glm::mat4 getModelMatrix() const;
 
-    void setMeshTextures(unsigned int newTextureID);
+    std::vector<SceneObject> objects;
+
+    Model model;
+
+    Shader modelShader;
+
+    int ObjectID;
 
 
 private:
 
+   
+
+    glm::vec3 Position;
+    glm::vec3 Rotation;
+    glm::vec3 Scale;
+    glm::vec3 BaseColor;
+
+    std::string ObjectName;
+   
     glm::vec4 HighlightColor;
+
     float TextureOffsetX;
     float TextureOffsetY;
     float TextureScale;

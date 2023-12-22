@@ -11,31 +11,25 @@ Model::~Model()
 
 }
 
-Model::Model(string const& path, bool gamma)
-    : gammaCorrection(gamma)
+Model::Model(string const& path, bool gamma):gammaCorrection(gamma)
 {
     loadModel(path);
 }
 
 void Model::Draw(Shader shader)
 {
-    {
-        if (meshes.empty()) {
-            // std::cout << "No meshes to draw!" << std::endl;
-            return;
-        }
+     if (meshes.empty()) { return;}
 
-
-
-        for (unsigned int i = 0; i < meshes.size(); i++) {
-            meshes[i].Draw(shader);
-        }
-    }
+    for (unsigned int i = 0; i < meshes.size(); i++) 
+    { 
+        meshes[i].Draw(shader);
+    }  
 }
 
 void Model::setMeshTextures(const std::vector<Texture>& newTextures)
 {
-    for (Mesh& mesh : meshes) {
+    for (Mesh& mesh : meshes)
+    {
         mesh.setMeshTextures(newTextures);
     }
 }
@@ -43,23 +37,16 @@ void Model::setMeshTextures(const std::vector<Texture>& newTextures)
 void Model::SerializeModel(const std::string& filename)
 {
     std::ofstream out(filename, std::ios::binary);
-    if (!out.is_open()) {
-
-        // std::cout << "Could not open file for serialization: " << filename << std::endl;
-        return;
-    }
-
-
+    if (!out.is_open()) { return; }
+  
     size_t meshCount = this->meshes.size();
     out.write(reinterpret_cast<const char*>(&meshCount), sizeof(size_t));
-
 
     for (const Mesh& mesh : this->meshes) {
 
         size_t vertCount = mesh.vertices.size();
         out.write(reinterpret_cast<const char*>(&vertCount), sizeof(size_t));
         out.write(reinterpret_cast<const char*>(&mesh.vertices[0]), vertCount * sizeof(Vertex));
-
 
         size_t indexCount = mesh.indices.size();
         out.write(reinterpret_cast<const char*>(&indexCount), sizeof(size_t));
@@ -69,10 +56,8 @@ void Model::SerializeModel(const std::string& filename)
         out.write(reinterpret_cast<const char*>(&texCount), sizeof(size_t));
         for (const Texture& tex : mesh.textures) {
             size_t pathLength = tex.path.size();
-            // std::cout << "Saving texture path: " << tex.path << std::endl;
             out.write(reinterpret_cast<const char*>(&pathLength), sizeof(size_t));
             out.write(tex.path.c_str(), pathLength);
-
         }
     }
     out.close();
@@ -81,16 +66,11 @@ void Model::SerializeModel(const std::string& filename)
 void Model::DeserializeModel(const std::string& filename, const std::string& directory)
 {
     std::ifstream in(filename, std::ios::binary);
-    if (!in.is_open()) {
-        // std::cout << "Could not open file for deserialization: " << filename << std::endl;
-        return;
-    }
-
+    if (!in.is_open()) { return;}
 
     size_t meshCount;
     in.read(reinterpret_cast<char*>(&meshCount), sizeof(size_t));
     this->meshes.resize(meshCount);
-
 
     for (Mesh& mesh : this->meshes) {
 
@@ -99,26 +79,22 @@ void Model::DeserializeModel(const std::string& filename, const std::string& dir
         mesh.vertices.resize(vertCount);
         in.read(reinterpret_cast<char*>(&mesh.vertices[0]), vertCount * sizeof(Vertex));
 
-
         size_t indexCount;
         in.read(reinterpret_cast<char*>(&indexCount), sizeof(size_t));
         mesh.indices.resize(indexCount);
         in.read(reinterpret_cast<char*>(&mesh.indices[0]), indexCount * sizeof(unsigned int));
 
-
         size_t texCount;
         in.read(reinterpret_cast<char*>(&texCount), sizeof(size_t));
         mesh.textures.resize(texCount);
+
         for (Texture& tex : mesh.textures) {
             size_t pathLength;
             in.read(reinterpret_cast<char*>(&pathLength), sizeof(size_t));
             tex.path.resize(pathLength);
             in.read(&tex.path[0], pathLength);
-
-            tex.id = TextureFromFile(tex.path.c_str(), directory, this->gammaCorrection);
-            //std::cout << "Loading texture path: " << tex.path << std::endl;
+            tex.id = TextureFromFile(tex.path.c_str(), directory, this->gammaCorrection); 
         }
-
         mesh.setupMesh();
     }
     in.close();
@@ -126,36 +102,28 @@ void Model::DeserializeModel(const std::string& filename, const std::string& dir
 
 void Model::loadModel(string const& path)
 {
-    
-        Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
-            cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
-            return;
+            LOG.Log(Logger::LogLevel::Error, "ASSIMP::", importer.GetErrorString()); return;
         }
         directory = path.substr(0, path.find_last_of('/'));
         processNode(scene->mRootNode, scene);
-
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)
 {
-    {
-
-        for (unsigned int i = 0; i < node->mNumMeshes; i++)
+    for (unsigned int i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
             meshes.push_back(processMesh(mesh, scene));
         }
 
-        for (unsigned int i = 0; i < node->mNumChildren; i++)
+    for (unsigned int i = 0; i < node->mNumChildren; i++)
         {
             processNode(node->mChildren[i], scene);
-        }
-
-    }
+        }  
 }
 
 vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
@@ -177,7 +145,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type,
             }
         }
         if (!skip)
-        {   // если текстура еще не была загружена, то загружаем её
+        {   
             Texture texture;
             texture.id = TextureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
@@ -191,7 +159,6 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type,
 
 Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 {
-    {
         vector<Vertex> vertices;
         vector<unsigned int> indices;
         vector<Texture> textures;
@@ -246,8 +213,6 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
         std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
         return Mesh(vertices, indices, textures);
-
-    }
 
 }
 

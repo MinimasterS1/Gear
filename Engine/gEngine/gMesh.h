@@ -47,12 +47,6 @@ public:
 
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 
-    vector<Vertex> vertices;
-    vector<unsigned int> indices;
-    vector<Texture> textures;
-
-    unsigned int VAO;
-
     void setMeshTextures(const std::vector<Texture>& newTextures);
 
     void Initialize(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
@@ -60,6 +54,12 @@ public:
     void Draw(Shader& shader);
 
     void setupMesh();
+
+    unsigned int VAO, VBO, EBO;
+
+    vector<Vertex> vertices;
+    vector<unsigned int> indices;
+    vector<Texture> textures;
 
 
 };
