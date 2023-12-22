@@ -1,0 +1,6 @@
+File: C:\Gear\Engine\gCore\gLogger.h, Line: 42 | Description: Failed to initialize GLAD
+File: C:\Gear\Engine\gCore\gLogger.h, Line: 42 | Description: Failed to initialize GLAD
+File: C:\Gear\Engine\gCore\gLogger.h, Line: 55 | Description: Failed to initialize GLAD
+File: C:\Gear\Engine\gCore\gLogger.h, Line: 56 | Description: Failed to initialize GLAD
+File: C:\Gear\Engine\gCore\gLogger.h, Line: 49 | Description: Failed to initialize GLAD
+File: C:\Gear\Engine\gCore\gLogger.h, Line: 49 | Description: Failed to initialize GLAD
